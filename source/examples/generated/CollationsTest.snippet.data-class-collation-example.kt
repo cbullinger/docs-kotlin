@@ -1,1 +1,4 @@
-data class CollationExample(@BsonId val id: Int, val a: String)
+data class CollationExample(
+    @BsonId val id: Int,
+    val a: String
+)
