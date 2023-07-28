@@ -96,23 +96,23 @@ operations.
       .. code-block:: kotlin
 
         // Insert a document
-          val jedi =a Jedi("Luke Skywalker", 19)
-          collection.insertOne(jedi)
+        val jedi =a Jedi("Luke Skywalker", 19)
+        collection.insertOne(jedi)
 
-          // Find a document
-          val luke = collection.find(Jedi::name.name, "Luke Skywalker")
-          val jedis = collection.find(lt(Jedi::age.name, 30)).toList()
+        // Find a document
+        val luke = collection.find(Jedi::name.name, "Luke Skywalker")
+        val jedis = collection.find(lt(Jedi::age.name, 30)).toList()
 
-          // Update a document
-          val filter = Filters.eq(Jedi::name.name, "Luke Skywalker")
-          val update = Updates.set(Jedi::age.name, 20)
-          collection.updateOne(filter, update)
+        // Update a document
+        val filter = Filters.eq(Jedi::name.name, "Luke Skywalker")
+        val update = Updates.set(Jedi::age.name, 20)
+        collection.updateOne(filter, update)
 
-          // Delete a document
-          val filter = Filters.eq(Jedi::name.name, "Luke Skywalker")
-          collection.deleteOne(filter)
+        // Delete a document
+        val filter = Filters.eq(Jedi::name.name, "Luke Skywalker")
+        collection.deleteOne(filter)
 
-      Aggregation pipelines can be built using the ``aggregate`` method and the 
+      You can build aggregation pipelines using the ``aggregate`` method and the 
       ``pipeline`` function: 
 
       .. code-block:: kotlin
@@ -241,9 +241,15 @@ Both drivers provide support for type-safe queries using property references.
         import org.litote.kmongo.MongoOperator.sample
 
         val yoda = col.findOne("{name: {$regex: 'Yo.*'}}")!! 
-        val luke = col.aggregate<Jedi>("""[ {$match:{age:{$lt : ${yoda.age}}}},
-                                            {$sample:{size:1}}
-                                        ]""").first()
+
+        val luke = col.aggregate<Jedi>(
+            """
+            [ 
+                {$match: {age: {$lt : ${yoda.age}}}},
+                {$sample: {size: 1}}
+            ]
+            """
+        ).first()
 
       For more information, see the following KMongo documentation:
 
@@ -285,7 +291,7 @@ class lets you model data represented in a MongoDB collection in a flexible form
     You can use data classes and ``Document`` classes to model data in KMongo:
 
     .. code-block:: kotlin
-
+      
       // With data class
       data class Movie(val title: String, val year: Int, val rating: Float)
 
@@ -408,18 +414,18 @@ Both drivers support synchronous and asynchronous operations.
 
       .. code-block:: kotlin
 
-          import com.mongodb.kotlin.client.MongoClient 
+        import com.mongodb.kotlin.client.MongoClient 
 
-          // Instantiate your collection
-          data class Jedi(val name: String, val age: Int)   
-          val uri = "<your-connection-string">
-          val mongoClient = MongoClient.create(uri)
-          val database = mongoClient.getDatabase("test")
-          val collection = database.getCollection<Jedi>("jedi")
+        // Instantiate your collection
+        data class Jedi(val name: String, val age: Int)   
+        val uri = "<your-connection-string">
+        val mongoClient = MongoClient.create(uri)
+        val database = mongoClient.getDatabase("test")
+        val collection = database.getCollection<Jedi>("jedi")
 
-          // Synchronous operations
-          val jedi =a Jedi("Luke Skywalker", 19)
-          collection.insertOne(jedi)
+        // Synchronous operations
+        val jedi =a Jedi("Luke Skywalker", 19)
+        collection.insertOne(jedi)
 
       To write asynchronous coroutine code:
 
@@ -435,11 +441,10 @@ Both drivers support synchronous and asynchronous operations.
         val collection = database.getCollection<Jedi>("jedi")
 
         runBlocking {
-
           // Async operations
           val jedi =a Jedi("Luke Skywalker", 19)
           collection.insertOne(jedi)
-        }
+          }
 
   .. tab::
     :tabid: KMongo
@@ -490,21 +495,21 @@ Both drivers support synchronous and asynchronous operations.
 
     .. code-block:: kotlin
 
-        import org.litote.kmongo.reactivestreams.*
-        import org.litote.kmongo.coroutine.*  
+      import org.litote.kmongo.reactivestreams.*
+      import org.litote.kmongo.coroutine.*  
 
-        // Instantiate your collection
-        data class Jedi(val name: String, val age: Int)
+      // Instantiate your collection
+      data class Jedi(val name: String, val age: Int)
 
-        val client = KMongo.createClient()
-        val database = client.getDatabase("test") 
-        val col = database.getCollection<Jedi>() 
+      val client = KMongo.createClient()
+      val database = client.getDatabase("test") 
+      val col = database.getCollection<Jedi>() 
 
-        runBlocking {
+      runBlocking {
           
-          // Async operations
-          col.insertOne(Jedi("Luke Skywalker", 19))
-          val yoda : Jedi? = col.findOne(Jedi::name eq "Yoda")
+        // Async operations
+        col.insertOne(Jedi("Luke Skywalker", 19))
+        val yoda : Jedi? = col.findOne(Jedi::name eq "Yoda")
         }
 
     To learn more, refer to the `Quick Start <https://litote.org/kmongo/quick-start/>`__ 

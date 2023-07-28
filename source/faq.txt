@@ -11,7 +11,7 @@ FAQ
    :class: singlecol
 
 What if I can't connect to a MongoDB instance?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------
 
 If you have trouble connecting to a MongoDB deployment, see
 the :ref:`Connection Troubleshooting Guide <kotlin-connection-troubleshooting>`
